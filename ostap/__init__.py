@@ -1,2 +1,6 @@
 import data
-import rootnotes
+
+try:
+    import rootnotes
+except NameError:
+    pass
