@@ -26,6 +26,21 @@ import tempfile
 from IPython.core import display
 
 
+def random_canvas(size=(800, 600)):
+    """Helper method for creating canvas with random name"""
+
+    import uuid
+    name = str(uuid.uuid4())
+
+    # Check if icanvas already exists
+    canvas = ROOT.gROOT.FindObject(name)
+    assert len(size) == 2
+    if canvas:
+        raise Exception('uuid found')
+    else:
+        return ROOT.TCanvas(name, name, size[0], size[1])
+
+
 def canvas(name="icanvas", size=(800, 600)):
     """Helper method for creating canvas"""
 
@@ -44,17 +59,17 @@ def default_canvas(name="icanvas", size=(800, 600)):
 
 
 def _display_canvas(canvas):
-    file = tempfile.NamedTemporaryFile(suffix=".png")
-    canvas.SaveAs(file.name)
-    ip_img = display.Image(filename=file.name, format='png', embed=True)
+    tmpfile = tempfile.NamedTemporaryFile(suffix=".png")
+    canvas.SaveAs(tmpfile.name)
+    ip_img = display.Image(filename=tmpfile.name, format='png', embed=True)
     return ip_img._repr_png_()
 
 
 def _display_any(obj):
-    file = tempfile.NamedTemporaryFile(suffix=".png")
+    tmpfile = tempfile.NamedTemporaryFile(suffix=".png")
     obj.Draw()
-    ROOT.gPad.SaveAs(file.name)
-    ip_img = display.Image(filename=file.name, format='png', embed=True)
+    ROOT.gPad.SaveAs(tmpfile.name)
+    ip_img = display.Image(filename=tmpfile.name, format='png', embed=True)
     return ip_img._repr_png_()
 
 # register display function with PNG formatter:
