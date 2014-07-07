@@ -21,7 +21,12 @@ def params_table(fit_result):
 
 
     for name, val in fit_result.parameters().items():
-        if float(min(abs(val[0] - val[1].getMax()), abs(val[0] - val[1].getMin())) / val[0]) < 1e-3:
+        d_low  = (abs(val[0] - val[1].getMax()), val[1].getMax())
+        d_high = (abs(val[0] - val[1].getMin()), val[1].getMax())
+
+        delta, norm = min(d_low, d_high, key=lambda x: x[1])
+
+        if float(delta) / norm < 1e-3:
             s += '<tr><th><font color="red">{}</font></th> <th>{}</th> <th>{}</th> <th>{}</th></tr>'.format(name, val[0], val[1].getMin(), val[1].getMax())
         else:
             s += '<tr><th>{}</th> <th>{}</th> <th>{}</th> <th>{}</th></tr>'.format(name, val[0], val[1].getMin(), val[1].getMax())
