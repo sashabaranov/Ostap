@@ -19,14 +19,17 @@ def params_table(fit_result):
     s += "minNll: <b>{}</b><br/>".format(fit_result.minNll())
     s += "<table><tr><th>Name</th> <th>Value</th> <th>Min</th> <th>Max</th> </tr>"
 
-
+    eps = 1e-10
     for name, val in fit_result.parameters().items():
-        d_low  = (abs(val[0] - val[1].getMax()), val[1].getMax())
-        d_high = (abs(val[0] - val[1].getMin()), val[1].getMax())
+        d_low  = (val[0] - val[1].getMin(), val[1].getMin())
+        d_high = (val[0] - val[1].getMax(), val[1].getMax())
 
-        delta, norm = min(d_low, d_high, key=lambda x: x[1])
-
-        if float(delta) / norm < 1e-3:
+        delta, norm = min(d_low, d_high, key=lambda x: x[0])
+        
+        if abs(norm) < eps:
+            norm = eps
+        
+        if abs(float(delta) / norm) < 1e-3:
             s += '<tr><th><font color="red">{}</font></th> <th>{}</th> <th>{}</th> <th>{}</th></tr>'.format(name, val[0], val[1].getMin(), val[1].getMax())
         else:
             s += '<tr><th>{}</th> <th>{}</th> <th>{}</th> <th>{}</th></tr>'.format(name, val[0], val[1].getMin(), val[1].getMax())
