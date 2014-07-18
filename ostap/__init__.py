@@ -1,8 +1,7 @@
 try:
     # Import some IPython-things here
+    from notebook_import import *
     import rootnotes
     import ipython_tools
-
-    from notebook_import import *
 except NameError:
     pass
