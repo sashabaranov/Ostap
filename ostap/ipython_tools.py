@@ -21,8 +21,8 @@ def params_table(fit_result):
 
     eps = 1e-10
     for name, val in fit_result.parameters().items():
-        d_low  = (val[0] - val[1].getMin(), val[1].getMin())
-        d_high = (val[0] - val[1].getMax(), val[1].getMax())
+        d_low  = (val[0].value() - val[1].getMin(), val[1].getMin())
+        d_high = (val[0].value() - val[1].getMax(), val[1].getMax())
 
         delta, norm = min(d_low, d_high, key=lambda x: x[0])
         
